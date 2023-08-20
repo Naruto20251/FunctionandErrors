@@ -1,36 +1,48 @@
-# FunctionandErrors
+# VotingSystem Smart Contract
 
-
-This repository contains a basic Solidity smart contract named `ERRORS`. This contract demonstrates the usage of `require`, `assert`, and `revert` statements to enforce conditions and handle errors within a smart contract.
+The VotingSystem smart contract is a simple Ethereum-based voting system that allows users to vote for a candidate while enforcing various rules using `require`, `assert`, and `revert` for error handling and control flow.
 
 ## Contract Overview
 
-The `SimpleSmartContract` is a basic contract with the following functionalities:
+- **Admin**: The contract creator is the admin, responsible for managing the voting process.
+- **Voters**: Each Ethereum address represents a voter. Once a voter casts a vote, they cannot vote again.
+- **Total Votes**: The contract keeps track of the total number of votes cast.
+- **Maximum Total Votes**: There is a predefined maximum limit of total votes that can be cast.
 
-1. **Constructor**: Initializes the contract by setting the contract deployer's address as the owner and the initial value to 0.
+## Functions
 
-2. **setValue**: Allows the owner to set a new value, but only if the new value is greater than the current value. It utilizes `require` statements to enforce the conditions.
+### `vote()`
 
-3. **assertExample**: Illustrates the use of the `assert` statement to validate a condition and revert the transaction if the condition is false.
+- Voters can call this function to cast their votes.
+- Requirements:
+    - The sender has not voted before.
+    - The sender's address is valid.
+    - The total votes have not exceeded the maximum limit.
+- Effects:
+    - The sender's vote is recorded.
+    - The total votes count is increased.
 
-4. **revertExample**: Demonstrates how the `revert` statement can be used to revert a transaction with a custom error message.
+### `closeVoting()`
+
+- Only the admin can call this function to close the voting process.
+- Requirements:
+    - The admin can only close the voting once.
+- Effects:
+    - The admin address is set to `address(0)`, indicating that voting is closed.
+    - A `revert` is triggered to indicate the closure of voting.
 
 ## Usage
 
-1. Deploy the `SimpleSmartContract` on an Ethereum network that supports Solidity version 0.8.0 or compatible versions.
+1. Deploy the contract to the Ethereum network.
+2. The admin allocates voting tokens to voters using the `vote()` function.
+3. Voters call the `vote()` function to cast their votes.
+4. The admin can close the voting process using the `closeVoting()` function.
 
-2. Interact with the contract using the functions described above.
+## Error Handling
 
-    - Use the `setValue` function to set a new value, ensuring that the sender is the owner and the new value is greater than the current value.
-    
-    - Call the `assertExample` function, passing two integers. The function will add the integers if they are not equal; otherwise, the transaction will revert.
-    
-    - Call the `revertExample` function to see how a transaction can be reverted with a custom error message.
-
-3. Ensure that you have a suitable development environment set up, such as [Remix](https://remix.ethereum.org/) or [Truffle](https://www.trufflesuite.com/truffle), to compile, deploy, and interact with the smart contract.
-
-
+The contract uses `require` to enforce various conditions, such as preventing double voting and checking if the sender's address is valid. `assert` is used to ensure that the total votes do not overflow. `revert` is used to indicate the closure of voting by the admin.
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE).
+This contract is released under the MIT License. See the [LICENSE](LICENSE) file for more details.
+
